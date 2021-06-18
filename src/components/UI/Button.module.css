@@ -1,0 +1,26 @@
+.button {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.6rem;
+    outline: none;
+    font-weight: bold;
+    padding: 0.5rem 0.75rem;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+    transition: 0.3s;
+}
+.button:hover {
+    filter: brightness(0.9);
+}
+.button-alt {
+    background: #c21e57;
+    color: #fff;
+}
+.button:disabled {
+    cursor: not-allowed;
+    background-color: #ddd;
+}

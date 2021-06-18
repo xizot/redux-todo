@@ -1,0 +1,23 @@
+.form {
+    width: 40rem;
+    max-width: 90%;
+    padding: 3rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    margin: 0 auto;
+    background-color: #fff;
+    animation: up 1s forwards;
+}
+@media only screen and (max-width: 768px) {
+    .form {
+        padding: 1.5rem;
+    }
+}
+
+@keyframes up {
+    0% {
+        transform: translateY(3rem);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
