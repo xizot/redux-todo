@@ -1,0 +1,82 @@
+.task-item {
+    width: 100%;
+    display: flex;
+    padding: 1rem 0.5rem;
+    border-bottom: 1px solid #e9edfb;
+    animation: up 1s forwards;
+}
+
+@keyframes up {
+    0% {
+        transform: translateY(0.5rem);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.check-box {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    position: relative;
+    transform: translateY(1px);
+    cursor: pointer;
+}
+.check-box::after {
+    content: "✔";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    background-color: #ced1de;
+    opacity: 0;
+    transition: opacity 0.5s;
+    line-height: 16px;
+}
+.task-item p {
+    display: inline-block;
+    font-size: 1.4rem;
+    margin-left: 5px;
+    flex: 1;
+    color: #333;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    transition: color 0.5s;
+}
+
+.actions {
+    display: flex;
+    margin-left: auto;
+}
+.icon {
+    margin-left: 1rem;
+    cursor: pointer;
+    font-size: 1.6rem;
+    transition: color 0.5s;
+}
+
+.edit {
+    color: #1c91a3;
+}
+.trash {
+    color: #c20038;
+}
+.is-done .edit,
+.is-done .trash,
+.is-done p,
+.is-done input {
+    color: rgba(0, 0, 0, 0.36);
+}
+.is-done .check-box::after {
+    opacity: 1;
+}

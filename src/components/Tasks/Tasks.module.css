@@ -1,0 +1,73 @@
+.tasks {
+    padding-top: 20rem;
+    min-height: 100vh;
+}
+@media only screen and (max-width: 450px) {
+    .tasks {
+        padding-top: 15rem;
+    }
+}
+.tasks form {
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
+}
+.tasks-list {
+    width: 100%;
+    margin-top: 3rem;
+    list-style: none;
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
+    max-height: 40vh;
+    overflow: auto;
+}
+.not-completed {
+    margin-bottom: 1rem;
+}
+.completed {
+    font-size: 1.4rem;
+    color: rgba(0, 0, 0, 0.36);
+}
+.completed h3 {
+    margin-bottom: 0.5rem;
+}
+.container {
+    width: 90%;
+    max-width: 60rem;
+    margin: 0 auto;
+}
+
+.tasks-input {
+    display: block;
+    border: 1px solid #ddd;
+    outline: none;
+    padding: 0.5rem 0.75rem;
+    font-size: 1.6rem;
+    background: transparent;
+    border-radius: 5px;
+    margin-bottom: 0.3rem;
+    width: 100%;
+}
+.tasks-input:focus {
+    background-color: rgba(140, 229, 248, 0.1);
+    border-color: #8ce5f8;
+}
+
+.invalid,
+.invalid:focus {
+    background-color: rgba(194, 30, 87, 0.1);
+    border-color: #c21e57;
+}
+
+.text-helper {
+    font-size: 1.2rem;
+    color: #b1b1b1;
+}
+.no-task {
+    font-size: 1.6rem;
+    text-align: center;
+    color: #c21e57;
+}

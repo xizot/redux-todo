@@ -3,8 +3,14 @@ import Input from "./../../components/UI/Input";
 import classes from "./LoginForm.module.css";
 import Button from "../../components/UI/Button";
 import { isEmpty, isGreaterThreeCharacters } from "../../helpers";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-const LoginForm = (props) => {
+const LoginForm = ({ onLogin }) => {
+    const { status: loginStatus, message: loginMessage } = useSelector(
+        (state) => state.auth.response
+    );
+
     const {
         value: usernameEntered,
         hasError: usernameHasError,
@@ -29,12 +35,13 @@ const LoginForm = (props) => {
         if (!formIsValid) {
             return;
         }
-        console.log(usernameEntered);
-        console.log(passwordEntered);
+
+        onLogin(usernameEntered, passwordEntered);
         usernameReset();
         passwordReset();
     };
     return (
+    
         <form onSubmit={formSubmitHandler} className={classes.form}>
             <Input
                 inputConfig={{
@@ -62,6 +69,9 @@ const LoginForm = (props) => {
                 hasError={passwordHasError}
                 errorMessage="Please enter a valid password!"
             />
+            {loginStatus !== 200 && (
+                <p className={classes["login-failed"]}>{loginMessage}</p>
+            )}
             <div className="form-actions">
                 <Button
                     buttonConfig={{
@@ -70,6 +80,9 @@ const LoginForm = (props) => {
                     }}
                     text="Sign In"
                 />
+            </div>
+            <div className={classes["another-actions"]}>
+                <Link to="/register"> Create an account.</Link>
             </div>
         </form>
     );

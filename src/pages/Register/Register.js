@@ -4,6 +4,10 @@ import classes from "../Login/LoginForm.module.css";
 import registerClasses from "./Register.module.css";
 import Button from "../../components/UI/Button";
 import { isGreaterThreeCharacters, isEmpty } from "../../helpers";
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect, Link } from "react-router-dom";
+import { authActions } from "../../reducers/auth";
+import { useEffect } from "react";
 const Register = (props) => {
     const {
         value: nameEntered,
@@ -31,12 +35,34 @@ const Register = (props) => {
         inputResetHandler: passwordReset,
     } = useInput(isEmpty);
 
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+    const { status: registerStatus, message: registerMessage } = useSelector(
+        (state) => state.auth.response
+    );
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(authActions.resetResponse());
+    }, [dispatch]);
+
+    if (isAuthenticated) {
+        return <Redirect to="/" />;
+    }
+
     const formIsValid = usernameIsValid && passwordIsValid && nameIsValid;
+
     const formSubmitHandler = (event) => {
         event.preventDefault();
         if (!formIsValid) {
             return;
         }
+        dispatch(
+            authActions.register({
+                fullname: nameEntered,
+                username: usernameEntered,
+                password: passwordEntered,
+            })
+        );
         usernameReset();
         passwordReset();
         nameReset();
@@ -83,6 +109,9 @@ const Register = (props) => {
                     hasError={passwordHasError}
                     errorMessage="Please enter a valid password!"
                 />
+                {registerStatus !== 200 && (
+                    <p className={classes["login-failed"]}>{registerMessage}</p>
+                )}
                 <div className="form-actions">
                     <Button
                         buttonConfig={{
@@ -91,6 +120,10 @@ const Register = (props) => {
                         }}
                         text="Sign Up"
                     />
+                </div>
+                <div className={classes["another-actions"]}>
+                    Already have an account?
+                    <Link to="/login"> Log in →</Link>
                 </div>
             </form>
         </div>

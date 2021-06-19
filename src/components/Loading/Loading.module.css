@@ -1,0 +1,49 @@
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 30;
+    background-color: #000;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.line {
+    position: relative;
+    width: 1px;
+    height: 30rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.line::after {
+    content: "''";
+    position: absolute;
+
+    width: 100%;
+    height: 0;
+
+    background-color: #fff;
+
+    animation: to-up 2s forwards;
+}
+@keyframes to-up {
+    0% {
+        height: 0;
+    }
+    10% {
+        height: 30%;
+    }
+    40% {
+        height: 25%;
+    }
+    90% {
+        height: 50%;
+    }
+    100% {
+        height: 100%;
+    }
+}

@@ -12,6 +12,7 @@
     background-color: #c21e57;
     color: #fff;
 }
+
 .header h2 {
     font-size: 3rem;
 }
@@ -20,10 +21,29 @@
     align-items: center;
     list-style: none;
 }
+@media only screen and (max-width: 768px) {
+    .header {
+        padding: 0 3rem;
+    }
+    .header h2 {
+        font-size: 2rem;
+    }
+}
+@media only screen and (max-width: 450px) {
+    .header {
+        padding: 0 1.5rem;
+    }
+}
 .header li {
     margin-left: 2rem;
     font-size: 1.6rem;
     font-weight: bold;
+    cursor: pointer;
+}
+@media only screen and (max-width: 450px) {
+    .header li {
+        margin-left: 1rem;
+    }
 }
 .header a {
     display: block;
@@ -33,6 +53,7 @@
 }
 .header a:hover {
     opacity: 0.8;
+    text-decoration: underline;
 }
 .register a {
     background: white;

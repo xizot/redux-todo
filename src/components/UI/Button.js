@@ -2,7 +2,7 @@ import classes from "./Button.module.css";
 
 const Button = ({ text, onClick, buttonConfig }) => {
     const buttonClasses = `${classes.button} ${
-        buttonConfig.alt ? classes["button-alt"] : ""
+        buttonConfig?.alt ? classes["button-alt"] : ""
     }`;
 
     return (
