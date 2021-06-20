@@ -3,10 +3,10 @@ import { useState } from "react";
 import { isEmpty } from "../../../helpers";
 import { useInput } from "../../../hooks/use-input";
 import Modal from "./../../UI/Modal";
-import { tasksActions } from "./../../../reducers/task";
 import classes from "./TaskEditModal.module.css";
 import loginFormClasses from "./../Tasks.module.css";
 import Button from "../../UI/Button";
+import { updateTitle } from "../../../actions/task-actions";
 const TaskEditModal = ({ id, title, onCloseEditModal }) => {
     const [isChanged, setIsChanged] = useState(false);
     const {
@@ -31,8 +31,8 @@ const TaskEditModal = ({ id, title, onCloseEditModal }) => {
             return;
         }
         dispatch(
-            tasksActions.updateTask({
-                id,
+            updateTitle({
+                taskId: id,
                 title: enteredTaskEdit,
             })
         );

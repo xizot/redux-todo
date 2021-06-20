@@ -3,47 +3,58 @@ import { createSlice } from "@reduxjs/toolkit";
 const authSlice = createSlice({
     name: "auth",
     initialState: {
+        accessToken: null,
+        refreshToken: null,
         isAuthenticated: false,
-        response: {
-            status: 200,
-            message: "",
-        },
+        registerSuccessMessage: null,
+        registerError: null,
+        loginError: null,
     },
     reducers: {
-        login(state, action) {
-            const { username, password } = action.payload;
-            if (username === "abc" && password === "123") {
-                state.isAuthenticated = true;
-                state.response.status = 200;
-                state.response.message = "Login successfully";
-            } else if (username === "abc") {
-                state.response.status = 401;
-                state.response.message =
-                    "The password you entered was not valid.";
-            } else {
-                state.response.status = 401;
-                state.response.message =
-                    "The username you entered isn't connected to an account";
-            }
+        verifiedToken(state) {
+            state.isAuthenticated = true;
+            state.accessToken = localStorage.getItem("accessToken");
+            state.refreshToken = localStorage.getItem("refreshToken");
+            state.registerError = null;
+            state.loginError = null;
         },
-        register(state, action) {
-            const { fullname, username, password } = action.payload;
-            console.log(fullname, password);
-            if (username !== "abc") {
-                state.isAuthenticated = true;
-                state.response.status = 200;
-                state.response.message = "Register successfully";
-            } else {
-                state.response.status = 401;
-                state.response.message = "The username is taken. Try another!";
-            }
+        loginSucceeded(state, action) {
+            const { accessToken, refreshToken } = action.payload;
+            state.accessToken = accessToken;
+            state.refreshToken = refreshToken;
+            state.isAuthenticated = true;
+
+            state.registerError = null;
+            state.loginError = null;
+
+            localStorage.setItem("accessToken", accessToken);
+            localStorage.setItem("refreshToken", refreshToken);
+        },
+        loginFailed(state, action) {
+            state.loginError = action.payload;
+        },
+        registerFailed(state, action) {
+            state.registerError = action.payload;
+        },
+        registerSucceeded(state, action) {
+            state.registerSuccessMessage = action.payload;
         },
         logout(state) {
             state.isAuthenticated = false;
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
         },
-        resetResponse(state) {
-            state.response.status = 200;
-            state.response.message = "";
+        resetError(state) {
+            state.loginError = null;
+            state.registerError = null;
+        },
+        resetState(state) {
+            state.accessToken = null;
+            state.refreshToken = null;
+            state.isAuthenticated = false;
+            state.registerSuccessMessage = null;
+            state.registerError = null;
+            state.loginError = null;
         },
     },
 });

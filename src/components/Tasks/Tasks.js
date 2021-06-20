@@ -3,19 +3,22 @@ import { useInput } from "./../../hooks/use-input";
 import { isEmpty } from "./../../helpers/index";
 import TaskItem from "./TaskItem/TaskItem";
 import { useDispatch, useSelector } from "react-redux";
-import { v4 as uuidv4 } from "uuid";
 import { tasksActions } from "./../../reducers/task";
 import TaskEditModal from "./TaskEditModal/TaskEditModal";
 import { useState } from "react";
+import { addTask, getTasks } from "../../actions/task-actions";
+import { useEffect } from "react";
 const Tasks = (props) => {
-    const tasks = useSelector((state) => state.tasks.currentTasks);
+    const tasks = useSelector((state) => state.tasks.notCompletedTasks);
     const completedTasks = useSelector((state) => state.tasks.completedTasks);
     const isShownModal = useSelector((state) => state.tasks.isShownModal);
+    const isFetchingData = useSelector((state) => state.tasks.isFetchingData);
     const [taskEdit, setTaskEdit] = useState({
         id: null,
         title: null,
     });
     const dispatch = useDispatch();
+
     const {
         value: enteredTask,
         isValid: enteredTaskIsValid,
@@ -30,13 +33,7 @@ const Tasks = (props) => {
         if (!enteredTaskIsValid) {
             return;
         }
-        dispatch(
-            tasksActions.addTask({
-                id: uuidv4(),
-                title: enteredTask,
-                isDone: false,
-            })
-        );
+        dispatch(addTask(enteredTask));
 
         taskReset();
     };
@@ -50,6 +47,11 @@ const Tasks = (props) => {
         });
         dispatch(tasksActions.showModal());
     };
+
+    useEffect(() => {
+        dispatch(getTasks());
+    }, [dispatch]);
+
     const closeEditModalHandler = () => {
         dispatch(tasksActions.closeModal());
     };
@@ -61,8 +63,8 @@ const Tasks = (props) => {
     const tasksList = tasks.length
         ? tasks.map((task) => (
               <TaskItem
-                  key={task.id}
-                  id={task.id}
+                  key={task.taskId}
+                  id={task.taskId}
                   title={task.title}
                   isDone={task.isDone}
                   onShowEditModal={showEditModalHandler}
@@ -79,7 +81,7 @@ const Tasks = (props) => {
             {completedTasks.map((task, index) => (
                 <TaskItem
                     key={index}
-                    id={task.id}
+                    id={task.taskId}
                     title={task.title}
                     isDone={task.isDone}
                     onShowEditModal={showEditModalHandler}
@@ -115,10 +117,18 @@ const Tasks = (props) => {
                         </small>
                     </form>
                     <div className={classes["tasks-list"]}>
-                        <div className={classes["not-completed"]}>
-                            <ul>{tasksList}</ul>
-                        </div>
-                        {completedList}
+                        {isFetchingData ? (
+                            <p className={classes["loading-data"]}>
+                                Loading Data...
+                            </p>
+                        ) : (
+                            <>
+                                <div className={classes["not-completed"]}>
+                                    <ul>{tasksList}</ul>
+                                </div>
+                                {completedList}
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

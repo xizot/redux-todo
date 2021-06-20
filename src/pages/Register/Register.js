@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Redirect, Link } from "react-router-dom";
 import { authActions } from "../../reducers/auth";
 import { useEffect } from "react";
+import { register } from "../../actions/auth-actions";
 const Register = (props) => {
     const {
         value: nameEntered,
@@ -15,7 +16,6 @@ const Register = (props) => {
         isValid: nameIsValid,
         valueInputBlurHandler: nameBlurHandler,
         valueInputChangeHandler: nameChangeHandler,
-        inputResetHandler: nameReset,
     } = useInput(isEmpty);
     const {
         value: usernameEntered,
@@ -23,7 +23,6 @@ const Register = (props) => {
         isValid: usernameIsValid,
         valueInputBlurHandler: usernameBlurHandler,
         valueInputChangeHandler: usernameChangeHandler,
-        inputResetHandler: usernameReset,
     } = useInput(isGreaterThreeCharacters);
 
     const {
@@ -32,17 +31,17 @@ const Register = (props) => {
         isValid: passwordIsValid,
         valueInputBlurHandler: passwordBlurHandler,
         valueInputChangeHandler: passwordChangeHandler,
-        inputResetHandler: passwordReset,
     } = useInput(isEmpty);
 
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-    const { status: registerStatus, message: registerMessage } = useSelector(
-        (state) => state.auth.response
+    const error = useSelector((state) => state.auth.error);
+    const successMsg = useSelector(
+        (state) => state.auth.registerSuccessMessage
     );
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(authActions.resetResponse());
+        dispatch(authActions.resetError());
     }, [dispatch]);
 
     if (isAuthenticated) {
@@ -57,15 +56,12 @@ const Register = (props) => {
             return;
         }
         dispatch(
-            authActions.register({
+            register({
                 fullname: nameEntered,
                 username: usernameEntered,
                 password: passwordEntered,
             })
         );
-        usernameReset();
-        passwordReset();
-        nameReset();
     };
     return (
         <div className={registerClasses.register}>
@@ -109,8 +105,11 @@ const Register = (props) => {
                     hasError={passwordHasError}
                     errorMessage="Please enter a valid password!"
                 />
-                {registerStatus !== 200 && (
-                    <p className={classes["login-failed"]}>{registerMessage}</p>
+                {error && <p className={classes["login-failed"]}>{error}</p>}
+                {successMsg && (
+                    <p className={classes["register-succeeded"]}>
+                        {successMsg}
+                    </p>
                 )}
                 <div className="form-actions">
                     <Button

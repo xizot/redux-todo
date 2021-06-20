@@ -1,36 +1,20 @@
 import { Redirect, Route } from "react-router-dom";
 import Header from "./components/Layouts/Header";
-import { lazy, Suspense, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { tasksActions } from "./reducers/task";
+import { lazy, Suspense } from "react";
 import { ProtectedRoute } from "./components/Common/ProtectedRoute";
 import Loading from "./components/Loading/Loading";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { verifyToken } from "./actions/auth-actions";
 
 const Register = lazy(() => import("./pages/Register/Register"));
 const Login = lazy(() => import("./pages/Login/Login"));
 const Tasks = lazy(() => import("./components/Tasks/Tasks"));
 function App() {
-    const currentTasks = useSelector((state) => state.tasks.currentTasks);
-    const completedTasks = useSelector((state) => state.tasks.completedTasks);
     const dispatch = useDispatch();
     useEffect(() => {
-        const tasks = localStorage.getItem("tasks");
-        const completedTasks = localStorage.getItem("completed-tasks");
-
-        if (tasks) {
-            dispatch(tasksActions.replaceTasks(JSON.parse(tasks)));
-        }
-        if (completedTasks) {
-            dispatch(
-                tasksActions.replaceCompletedTasks(JSON.parse(completedTasks))
-            );
-        }
+        dispatch(verifyToken());
     }, [dispatch]);
-
-    useEffect(() => {
-        localStorage.setItem("tasks", JSON.stringify(currentTasks));
-        localStorage.setItem("completed-tasks", JSON.stringify(completedTasks));
-    }, [currentTasks, completedTasks]);
 
     return (
         <Suspense fallback={<Loading />}>

@@ -7,11 +7,18 @@
     background-color: #fff;
     animation: up 1s forwards;
 }
-.login-failed {
+.login-failed,
+.register-failed {
     color: #c21e57;
     font-size: 1.2rem;
     letter-spacing: 0.1rem;
     margin-bottom: 1rem;
+}
+.register-succeeded {
+    font-size: 1.2rem;
+    letter-spacing: 0.1rem;
+    margin-bottom: 1rem;
+    color: #8ce5f8;
 }
 .another-actions {
     font-size: 1.4rem;

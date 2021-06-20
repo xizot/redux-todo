@@ -7,17 +7,13 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const LoginForm = ({ onLogin }) => {
-    const { status: loginStatus, message: loginMessage } = useSelector(
-        (state) => state.auth.response
-    );
-
+    const loginError = useSelector((state) => state.auth.loginError);
     const {
         value: usernameEntered,
         hasError: usernameHasError,
         isValid: usernameIsValid,
         valueInputBlurHandler: usernameBlurHandler,
         valueInputChangeHandler: usernameChangeHandler,
-        inputResetHandler: usernameReset,
     } = useInput(isEmpty);
 
     const {
@@ -26,7 +22,6 @@ const LoginForm = ({ onLogin }) => {
         isValid: passwordIsValid,
         valueInputBlurHandler: passwordBlurHandler,
         valueInputChangeHandler: passwordChangeHandler,
-        inputResetHandler: passwordReset,
     } = useInput(isGreaterThreeCharacters);
 
     const formIsValid = usernameIsValid && passwordIsValid;
@@ -37,11 +32,8 @@ const LoginForm = ({ onLogin }) => {
         }
 
         onLogin(usernameEntered, passwordEntered);
-        usernameReset();
-        passwordReset();
     };
     return (
-    
         <form onSubmit={formSubmitHandler} className={classes.form}>
             <Input
                 inputConfig={{
@@ -69,8 +61,8 @@ const LoginForm = ({ onLogin }) => {
                 hasError={passwordHasError}
                 errorMessage="Please enter a valid password!"
             />
-            {loginStatus !== 200 && (
-                <p className={classes["login-failed"]}>{loginMessage}</p>
+            {loginError && (
+                <p className={classes["login-failed"]}>{loginError}</p>
             )}
             <div className="form-actions">
                 <Button

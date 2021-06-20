@@ -3,16 +3,21 @@ import classes from "./TaskItem.module.css";
 import { BsTrash } from "react-icons/bs";
 import { BiEditAlt } from "react-icons/bi";
 import { useDispatch } from "react-redux";
-import { tasksActions } from "../../../reducers/task";
+import { deleteTask, toggleCompleted } from "../../../actions/task-actions";
 
 const TaskItem = ({ title, id, isDone, onShowEditModal }) => {
     const dispatch = useDispatch();
 
     const toggleTaskCompeletedHandler = () => {
-        dispatch(tasksActions.toggleCompleted(id));
+        dispatch(
+            toggleCompleted({
+                taskId: id,
+                isDone,
+            })
+        );
     };
     const removeTaskHandler = () => {
-        dispatch(tasksActions.removeTask(id));
+        dispatch(deleteTask(id));
     };
     const showEditModalHandler = () => {
         onShowEditModal({ title, id });

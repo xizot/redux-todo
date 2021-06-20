@@ -3,76 +3,88 @@ import { createSlice } from "@reduxjs/toolkit";
 const tasksSlice = createSlice({
     name: "tasks",
     initialState: {
+        isFetchingData: false,
         currentTasks: [],
+        notCompletedTasks: [],
         isShownModal: false,
         completedTasks: [],
+        error: null,
+        errorHandler: null,
     },
     reducers: {
-        replaceTasks(state, action) {
+        fetchingData(state) {
+            state.isFetchingData = true;
+        },
+        taskErrorHandler(state, action) {
+            state.errorHandler = action.payload;
+        },
+        resetErrorState(state) {
+            state.error = null;
+            state.errorHandler = null;
+        },
+        getTasksError(state, action) {
+            state.error = action.payload;
+            state.isFetchingData = false;
+        },
+        replaceCurrentTasks(state, action) {
+            state.isFetchingData = false;
             state.currentTasks = [...action.payload];
+            state.completedTasks = [...action.payload].filter(
+                (task) => task.isDone
+            );
+            state.notCompletedTasks = [...action.payload].filter(
+                (task) => !task.isDone
+            );
         },
-        replaceCompletedTasks(state, action) {
-            state.completedTasks = [...action.payload];
-        },
+
         addTask(state, action) {
             const newTask = action.payload;
-            state.currentTasks.push(newTask);
+            state.currentTasks.unshift(newTask);
+            state.notCompletedTasks.unshift(newTask);
         },
         removeTask(state, action) {
             const id = action.payload;
             state.currentTasks = state.currentTasks.filter(
-                (task) => task.id !== id
+                (task) => task.taskId !== id
+            );
+            state.notCompletedTasks = state.notCompletedTasks.filter(
+                (task) => task.taskId !== id
             );
             state.completedTasks = state.completedTasks.filter(
-                (task) => task.id !== id
+                (task) => task.taskId !== id
             );
         },
-        updateTask(state, action) {
-            const { id, title } = action.payload;
+        updateTitle(state, action) {
+            const { taskId, title } = action.payload;
             const existingCurrentTaskIndex = state.currentTasks.findIndex(
-                (task) => task.id === id
+                (task) => task.taskId === taskId
             );
-            const existingCompletedTaskIndex = state.completedTasks.findIndex(
-                (task) => task.id === id
+            state.currentTasks[existingCurrentTaskIndex].title = title;
+            state.completedTasks = state.currentTasks.filter(
+                (task) => task.isDone
             );
-            existingCurrentTaskIndex !== -1 &&
-                (state.currentTasks[existingCurrentTaskIndex].title = title);
-            existingCompletedTaskIndex !== -1 &&
-                (state.completedTasks[existingCompletedTaskIndex].title =
-                    title);
+            state.notCompletedTasks = state.currentTasks.filter(
+                (task) => !task.isDone
+            );
+
             state.isShownModal = false;
         },
-        toggleCompleted(state, action) {
-            const id = action.payload;
+
+        updateComplete(state, action) {
+            const { taskId, isDone } = action.payload;
+
             const existingCurrentTaskIndex = state.currentTasks.findIndex(
-                (task) => task.id === id
+                (task) => task.taskId === taskId
             );
-            const existingCompletedTaskIndex = state.completedTasks.findIndex(
-                (task) => task.id === id
+            state.currentTasks[existingCurrentTaskIndex].isDone = isDone;
+            state.completedTasks = state.currentTasks.filter(
+                (task) => task.isDone
             );
-            if (existingCurrentTaskIndex !== -1) {
-                state.currentTasks[existingCurrentTaskIndex].isDone = true;
-                state.completedTasks.push(
-                    state.currentTasks[existingCurrentTaskIndex]
-                );
-                state.currentTasks = state.currentTasks.filter(
-                    (task) =>
-                        task.id !==
-                        state.currentTasks[existingCurrentTaskIndex].id
-                );
-            }
-            if (existingCompletedTaskIndex !== -1) {
-                state.completedTasks[existingCompletedTaskIndex].isDone = false;
-                state.currentTasks.push(
-                    state.completedTasks[existingCompletedTaskIndex]
-                );
-                state.completedTasks = state.completedTasks.filter(
-                    (task) =>
-                        task.id !==
-                        state.completedTasks[existingCompletedTaskIndex].id
-                );
-            }
+            state.notCompletedTasks = state.currentTasks.filter(
+                (task) => !task.isDone
+            );
         },
+
         showModal(state) {
             state.isShownModal = true;
         },

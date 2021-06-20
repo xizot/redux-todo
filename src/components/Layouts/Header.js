@@ -1,13 +1,13 @@
 import classes from "./Header.module.css";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { authActions } from "./../../reducers/auth";
+import { logout } from "../../actions/auth-actions";
 const Header = (props) => {
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const dispatch = useDispatch();
 
     const logoutHandler = () => {
-        dispatch(authActions.logout());
+        dispatch(logout());
     };
     return (
         <header className={classes.header}>
