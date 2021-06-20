@@ -57,7 +57,7 @@ export const verifyToken = () => async (dispatch) => {
     const httpVerify = async () => {
         dispatch(authActions.resetState());
         const response = await axios.post(
-            `${process.env.REACT_APP_AUTH_URI}/auth/verifyToken`,
+            `${process.env.REACT_APP_AUTH_URI}/auth/verify-token`,
             {},
             {
                 headers,
