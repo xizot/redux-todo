@@ -34,7 +34,7 @@ const Register = (props) => {
     } = useInput(isEmpty);
 
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-    const error = useSelector((state) => state.auth.error);
+    const registerError = useSelector((state) => state.auth.registerError);
     const successMsg = useSelector(
         (state) => state.auth.registerSuccessMessage
     );
@@ -105,7 +105,9 @@ const Register = (props) => {
                     hasError={passwordHasError}
                     errorMessage="Please enter a valid password!"
                 />
-                {error && <p className={classes["login-failed"]}>{error}</p>}
+                {registerError && (
+                    <p className={classes["login-failed"]}>{registerError}</p>
+                )}
                 {successMsg && (
                     <p className={classes["register-succeeded"]}>
                         {successMsg}
