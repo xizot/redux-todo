@@ -7,16 +7,18 @@ const authSlice = createSlice({
         refreshToken: null,
         isAuthenticated: false,
         registerSuccessMessage: null,
-        registerError: null,
-        loginError: null,
+        errorResponse: null,
+        isRequesting: false,
     },
     reducers: {
+        sendRequest(state) {
+            state.isRequesting = true;
+        },
         verifiedToken(state) {
             state.isAuthenticated = true;
             state.accessToken = localStorage.getItem("accessToken");
             state.refreshToken = localStorage.getItem("refreshToken");
-            state.registerError = null;
-            state.loginError = null;
+            state.errorResponse = null;
         },
         loginSucceeded(state, action) {
             const { accessToken, refreshToken } = action.payload;
@@ -24,20 +26,19 @@ const authSlice = createSlice({
             state.refreshToken = refreshToken;
             state.isAuthenticated = true;
 
-            state.registerError = null;
-            state.loginError = null;
+            state.errorResponse = null;
 
             localStorage.setItem("accessToken", accessToken);
             localStorage.setItem("refreshToken", refreshToken);
+            state.isRequesting = false;
         },
-        loginFailed(state, action) {
-            state.loginError = action.payload;
-        },
-        registerFailed(state, action) {
-            state.registerError = action.payload;
+        requestError(state, action) {
+            state.errorResponse = action.payload;
+            state.isRequesting = false;
         },
         registerSucceeded(state, action) {
             state.registerSuccessMessage = action.payload;
+            state.isRequesting = false;
         },
         logout(state) {
             state.isAuthenticated = false;
@@ -45,16 +46,15 @@ const authSlice = createSlice({
             localStorage.removeItem("refreshToken");
         },
         resetError(state) {
-            state.loginError = null;
-            state.registerError = null;
+            state.errorResponse = null;
         },
         resetState(state) {
             state.accessToken = null;
             state.refreshToken = null;
             state.isAuthenticated = false;
             state.registerSuccessMessage = null;
-            state.registerError = null;
-            state.loginError = null;
+            state.errorResponse = null;
+            state.isRequesting = false;
         },
     },
 });

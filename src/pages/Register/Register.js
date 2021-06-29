@@ -1,6 +1,6 @@
 import { useInput } from "./../../hooks/use-input";
 import Input from "./../../components/UI/Input";
-import classes from "../Login/LoginForm.module.css";
+import classes from "../Login/Login.module.css";
 import registerClasses from "./Register.module.css";
 import Button from "../../components/UI/Button";
 import { isGreaterThreeCharacters, isEmpty } from "../../helpers";
@@ -34,7 +34,8 @@ const Register = (props) => {
     } = useInput(isEmpty);
 
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-    const registerError = useSelector((state) => state.auth.registerError);
+    const errorResponse = useSelector((state) => state.auth.errorResponse);
+    const isRequesting = useSelector((state) => state.auth.isRequesting);
     const successMsg = useSelector(
         (state) => state.auth.registerSuccessMessage
     );
@@ -105,8 +106,8 @@ const Register = (props) => {
                     hasError={passwordHasError}
                     errorMessage="Please enter a valid password!"
                 />
-                {registerError && (
-                    <p className={classes["login-failed"]}>{registerError}</p>
+                {errorResponse && (
+                    <p className={classes["login-failed"]}>{errorResponse}</p>
                 )}
                 {successMsg && (
                     <p className={classes["register-succeeded"]}>
@@ -119,7 +120,7 @@ const Register = (props) => {
                             disabled: !formIsValid,
                             alt: "true",
                         }}
-                        text="Sign Up"
+                        text={isRequesting ? "Signing up..." : "Sign up"}
                     />
                 </div>
                 <div className={classes["another-actions"]}>

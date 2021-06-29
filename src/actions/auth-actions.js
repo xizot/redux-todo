@@ -6,6 +6,7 @@ export const login =
     async (dispatch) => {
         const httpLogin = async () => {
             dispatch(authActions.resetState());
+            dispatch(authActions.sendRequest());
             const response = await axios.post(
                 `${process.env.REACT_APP_AUTH_URI}/auth/login`,
                 {
@@ -25,7 +26,11 @@ export const login =
         try {
             await httpLogin();
         } catch (error) {
-            dispatch(authActions.loginFailed(error.response.data?.error));
+            dispatch(
+                authActions.requestError(
+                    error?.response?.data?.error || "Something went wrong!"
+                )
+            );
         }
     };
 
@@ -34,6 +39,7 @@ export const register =
     async (dispatch) => {
         const httpRegister = async () => {
             dispatch(authActions.resetState());
+            dispatch(authActions.sendRequest());
             const response = await axios.post(
                 `${process.env.REACT_APP_AUTH_URI}/auth/register`,
                 { fullname, username, password }
@@ -45,7 +51,11 @@ export const register =
         try {
             await httpRegister();
         } catch (error) {
-            dispatch(authActions.registerFailed(error.response.data?.error));
+            dispatch(
+                authActions.requestError(
+                    error?.response?.data?.error || "Something went wrong!"
+                )
+            );
         }
     };
 
@@ -56,14 +66,13 @@ export const verifyToken = () => async (dispatch) => {
     }
     const httpVerify = async () => {
         dispatch(authActions.resetState());
-        const response = await axios.post(
+        await axios.post(
             `${process.env.REACT_APP_AUTH_URI}/auth/verify-token`,
             {},
             {
                 headers,
             }
         );
-        console.log(response.data?.message);
         dispatch(authActions.verifiedToken());
     };
 
@@ -81,13 +90,9 @@ export const logout = () => async (dispatch) => {
     }
     const httpLogout = async () => {
         dispatch(authActions.resetState());
-        const response = await axios.get(
-            `${process.env.REACT_APP_AUTH_URI}/auth/logout`,
-            {
-                headers,
-            }
-        );
-        console.log(response.data?.message);
+        await axios.get(`${process.env.REACT_APP_AUTH_URI}/auth/logout`, {
+            headers,
+        });
         dispatch(authActions.logout());
     };
 
